@@ -182,13 +182,13 @@ public class ModelParser {
      */
     private Object getValueFromJsonObject(JSONObject jsonObject, String jsonKey) {
         Object value = null;
-        if (jsonObject.has(jsonKey)) {
+//        if (jsonObject.has(jsonKey)) {
             try {
                 value = jsonObject.get(jsonKey);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+//        }
 
         // If object from json contains null then set the object as null
         if (value != null && value.toString().equalsIgnoreCase(NULL)) {
