@@ -36,9 +36,6 @@ public class ModelParser {
     private static final String TAG = "JsonParser";
     private static final String NULL = "null";
 
-    public ModelParser() {
-    }
-
     /**
      * Creates a new instance of the model class.
      *
@@ -46,7 +43,7 @@ public class ModelParser {
      *                   that will direct the parsing.
      * @return Returns a new object instance of the model class, null if exceptions occur.
      */
-    private Object getNewInstance(Class classModel) {
+    private static Object getNewInstance(Class classModel) {
         Object object = null;
         try {
             object = classModel.newInstance();
@@ -67,7 +64,7 @@ public class ModelParser {
      * @param jsonObject The API response object.
      * @return Returns a generic class containing the values from the json, null if exception occurs.
      */
-    public <T> T parse(Class<T> classModel, JSONObject jsonObject) {
+    public static <T> T parse(Class<T> classModel, JSONObject jsonObject) {
         Object object = getNewInstance(classModel);
 
         if (object != null) {
@@ -96,7 +93,7 @@ public class ModelParser {
      * @param jsonArray The API response object.
      * @return Returns an arrayList with a generic type parameter.
      */
-    public <E> ArrayList<E> parse(Class<E> objectType, JSONArray jsonArray) {
+    public static <E> ArrayList<E> parse(Class<E> objectType, JSONArray jsonArray) {
         ArrayList<E> arrayList = new ArrayList<>();
         for (int i=0; i<jsonArray.length(); i++) {
             Object value = getValueFromJsonArray(jsonArray, i);
@@ -122,7 +119,7 @@ public class ModelParser {
      * @param key The json key serving as the reference of the value in the json object
      * @param jsonObject The API response object.
      */
-    private void initMethodInvocation(Method method, Object classInstance, String key, JSONObject jsonObject) {
+    private static void initMethodInvocation(Method method, Object classInstance, String key, JSONObject jsonObject) {
         Object value = getValueFromJsonObject(jsonObject, key, method.getName());
 
         // Only invoke the method when the value is not null
@@ -163,7 +160,7 @@ public class ModelParser {
      * @param instance The instance of the container class.
      * @param value The parsed value from the json.
      */
-    private void invoke(Method method, Object instance, Object value) {
+    private static void invoke(Method method, Object instance, Object value) {
         try {
             method.invoke(instance, value);
         } catch (IllegalAccessException e) {
@@ -180,7 +177,7 @@ public class ModelParser {
      * @param jsonKey The json key corresponding to the value.
      * @return Returns an object from the json object, null otherwise.
      */
-    private Object getValueFromJsonObject(JSONObject jsonObject, String jsonKey, String currentMethod) {
+    private static Object getValueFromJsonObject(JSONObject jsonObject, String jsonKey, String currentMethod) {
         Object value = null;
        	if (jsonObject.has(jsonKey)) {
             try {
@@ -208,7 +205,7 @@ public class ModelParser {
      * @param index The index of the single object inside the array.
      * @return Returns an object from the json object, null otherwise.
      */
-    private Object getValueFromJsonArray(JSONArray jsonArray, int index) {
+    private static Object getValueFromJsonArray(JSONArray jsonArray, int index) {
         Object value = null;
         try {
             value = jsonArray.get(index);
@@ -225,7 +222,7 @@ public class ModelParser {
      * @param value The number value to be casted into the parameter type.
      * @return Returns an object casted into the parameter type.
      */
-    private Object castNumberObject(Class<?> parameterType, Object value) {
+    private static Object castNumberObject(Class<?> parameterType, Object value) {
         Object castedObject = value;
         if (parameterType == Float.class || parameterType == float.class) {
             castedObject = ((Number) value).floatValue();
@@ -247,7 +244,7 @@ public class ModelParser {
      *
      * @param message The error message.
      */
-    private void throwException(String message) {
+    private static void throwException(String message) {
         try {
             throw new ModelParserException(message);
         } catch (ModelParserException e) {
