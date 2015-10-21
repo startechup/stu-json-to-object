@@ -123,7 +123,7 @@ public class ModelParser {
      * @param jsonObject The API response object.
      */
     private void initMethodInvocation(Method method, Object classInstance, String key, JSONObject jsonObject) {
-        Object value = getValueFromJsonObject(jsonObject, key);
+        Object value = getValueFromJsonObject(jsonObject, key, method.getName());
 
         // Only invoke the method when the value is not null
         if (value != null) {
@@ -180,7 +180,7 @@ public class ModelParser {
      * @param jsonKey The json key corresponding to the value.
      * @return Returns an object from the json object, null otherwise.
      */
-    private Object getValueFromJsonObject(JSONObject jsonObject, String jsonKey) {
+    private Object getValueFromJsonObject(JSONObject jsonObject, String jsonKey, String currentMethod) {
         Object value = null;
        	if (jsonObject.has(jsonKey)) {
             try {
