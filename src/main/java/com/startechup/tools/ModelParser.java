@@ -24,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -92,26 +93,26 @@ public class ModelParser {
      * Gets the values from the {@link JSONArray JSONArrays}/response return from an api call
      * request and assign it to the field inside the class that will contain the parsed values.
      *
-     * @param objectType The type of object that the arrayList will contain.
+     * @param objectType The type of object that the List will contain.
      * @param jsonArray The API response object.
-     * @return Returns an arrayList with a generic type parameter.
+     * @return Returns an List with a generic type parameter.
      */
-    public static <E> ArrayList<E> parse(Class<E> objectType, JSONArray jsonArray) {
-        ArrayList<E> arrayList = new ArrayList<>();
+    public static <E> List<E> parse(Class<E> objectType, JSONArray jsonArray) {
+        List<E> list = new ArrayList<>();
         for (int i=0; i<jsonArray.length(); i++) {
             Object value = getValueFromJsonArray(jsonArray, i);
             if (value instanceof JSONObject) {
                 JSONObject jsonObject = (JSONObject) value;
-                arrayList.add(parse(objectType, jsonObject));
+                list.add(parse(objectType, jsonObject));
 
             } else if (value instanceof Number) {
                 Object castedObject = castNumberObject(objectType, value);
-                arrayList.add(objectType.cast(castedObject));
+                list.add(objectType.cast(castedObject));
             } else {
-                arrayList.add(objectType.cast(value));
+                list.add(objectType.cast(value));
             }
         }
-        return arrayList;
+        return list;
     }
 
     /**
@@ -158,10 +159,10 @@ public class ModelParser {
      *
      * @param classModel The mapped class.
      * @param jsonObject The JSON object response.
-     * @return Returns a map array containing key-ArrayList pair.
+     * @return Returns a map array containing key-List pair.
      */
-    public static <E> Map<String, ArrayList<E>> parseIntoMapArrayList(Class<E> classModel, JSONObject jsonObject) {
-        Map<String, ArrayList<E>> map = new HashMap<>();
+    public static <E> Map<String, List<E>> parseIntoMappedList(Class<E> classModel, JSONObject jsonObject) {
+        Map<String, List<E>> map = new HashMap<>();
 
         Iterator<String> iterator = jsonObject.keys();
         while (iterator.hasNext()) {
