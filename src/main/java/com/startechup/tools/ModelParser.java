@@ -25,6 +25,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * This is a class that will parse dynamically a {@link JSONObject JSONObjects} or {@link JSONArray
@@ -109,6 +112,69 @@ public class ModelParser {
             }
         }
         return arrayList;
+    }
+
+    /**
+     * Parses a json object into a {@link Map} object having the json property name as key and json property
+     * value as the map value.
+     *
+     * Sample dynamic json format:
+     *
+     * { "0": {// A jsonObject}, "1": {// A jsonObject}, "2": {// A jsonObject} }
+     * OR
+     * { "0": [// A jsonArray], "1": [// A jsonArray], "2": [// A jsonArray] }
+     * OR
+     * { "0": value, "1": value, "2": value }
+     *
+     * @param classModel The mapped class.
+     * @param jsonObject The JSON object response.
+     * @return Returns a map array containing key-value pair.
+     */
+    public static <E> Map<String, E> parseIntoMap(Class<E> classModel, JSONObject jsonObject) {
+        Map<String, E> map = new HashMap<>();
+
+        Iterator<String> iterator = jsonObject.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            try {
+                if (jsonObject.get(key) instanceof JSONObject) {
+                    map.put(key, parse(classModel, jsonObject.getJSONObject(key)));
+                } else {
+                    map.put(key, classModel.cast(jsonObject.get(key)));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return map;
+    }
+
+    /**
+     * Parses a json object into a {@link Map} object having the json property name as key and json property
+     * value as the map value.
+     *
+     * Sample dynamic json format:
+     * { "0": [// A jsonArray], "1": [// A jsonArray], "2": [// A jsonArray] }
+     *
+     * @param classModel The mapped class.
+     * @param jsonObject The JSON object response.
+     * @return Returns a map array containing key-ArrayList pair.
+     */
+    public static <E> Map<String, ArrayList<E>> parseIntoMapArrayList(Class<E> classModel, JSONObject jsonObject) {
+        Map<String, ArrayList<E>> map = new HashMap<>();
+
+        Iterator<String> iterator = jsonObject.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            try {
+                if (jsonObject.get(key) instanceof JSONArray) {
+                    map.put(key, parse(classModel, jsonObject.getJSONArray(key)));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return map;
     }
 
     /**
