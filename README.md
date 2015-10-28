@@ -42,12 +42,6 @@ Setting up the Model Object:
 Give a setter spec to the setter methods of the fields and then put the json keys to the setter spec.
 ```
 public class User {
-    public static final String KEY_ID = "id";
-    public static final String KEY_FIRST_NAME = "first_name";
-    public static final String KEY_LAST_NAME = "last_name";
-    public static final String KEY_AGE = "age";
-    public static final String KEY_GENDER = "gender";
-
     private int mId;
     private String mFirstName;
     private String mLastName;
@@ -55,29 +49,29 @@ public class User {
     private String mGender;
 
     //Setters
-    @SetterSpec(jsonKey = KEY_ID)
-    public void setId(int mId) {
-        this.mId = mId;
+    @SetterSpec(jsonKey = "id")
+    public void setId(int id) {
+        mId = id;
     }
 
-    @SetterSpec(jsonKey = KEY_FIRST_NAME)
-    public void setFirstName(String mFirstName) {
-        this.mFirstName = mFirstName;
+    @SetterSpec(jsonKey = "first_name")
+    public void setFirstName(String firstName) {
+        mFirstName = firstName;
     }
 
-    @SetterSpec(jsonKey = KEY_LAST_NAME)
-    public void setLastName(String mLastName) {
-        this.mLastName = mLastName;
+    @SetterSpec(jsonKey = "last_name")
+    public void setLastName(String lastName) {
+        mLastName = lastName;
     }
 
-    @SetterSpec(jsonKey = KEY_AGE)
-    public void setAge(int mAge) {
-        this.mAge = mAge;
+    @SetterSpec(jsonKey = "age")
+    public void setAge(int age) {
+        mAge = age;
     }
 
-    @SetterSpec(jsonKey = KEY_GENDER)
-    public void setGender(String mGender) {
-        this.mGender = mGender;
+    @SetterSpec(jsonKey = "gender")
+    public void setGender(String gender) {
+        mGender = gender;
     }
 
     //Getters
@@ -107,10 +101,8 @@ The json key that will be set to the SetterSpec should match to the JSON respons
 
 Using the parser:
 ```
-// Initilize the parser
-ModelParser parser = new ModelParser();
 // Parse the json object
-User user = parser.parse(User.class, jsonResponse);
+User user = ModelParser.parse(User.class, jsonResponse);
 
 // Test the results
 Log.i(TAG, "ID: " + user.getId());
